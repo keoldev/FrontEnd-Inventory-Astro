@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={inter.className}>
+    <main className="grid w-full grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] p-4 mx-auto gap-4 max-w-screen-2xl max-auto">
       <Component {...pageProps} />
-    </div>
+    </main>
   )
 }
