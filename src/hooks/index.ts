@@ -20,6 +20,7 @@ export interface Product {
   product_id: string
   product_name: string
   stock: string
+  image: string
 }
 
 const GET_FETCHER = (url: string): Promise<DirtyProduct[]> => fetch(url).then((res) => res.json())
@@ -31,7 +32,8 @@ export function useProducts() {
     description: product.description.S,
     product_id: product.product_id.S,
     product_name: product.product_name.S,
-    stock: product.stock.N
+    stock: product.stock.N,
+    image: `${process.env.NEXT_PUBLIC_CLOUDFRONT_URL}${product.product_id.S}.jpg`
   }))
 
   return {
