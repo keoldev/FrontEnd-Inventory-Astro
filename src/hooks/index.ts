@@ -26,7 +26,6 @@ const GET_FETCHER = (url: string): Promise<DirtyProduct[]> => fetch(url).then((r
 
 export function useProducts() {
   const { data, isLoading, error } = useSWR(process.env.NEXT_PUBLIC_API_URL, GET_FETCHER)
-  console.log({ data })
 
   const products: Product[] | undefined = data?.map((product) => ({
     description: product.description.S,

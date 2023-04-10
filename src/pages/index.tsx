@@ -17,7 +17,7 @@ export default function Home() {
     <>
       {products?.map((product) => (
         <div key={product.product_id} className="flex flex-col items-stretch justify-between p-4 border border-gray-200 rounded-md shadow cursor-pointer">
-          <img src={`https://d343esoj9v9gsz.cloudfront.net/${product.product_id}.jpg`} alt={product.product_name + ' image'} className='w-full h-auto aspect-square' />
+          <img src={`https://d15987hq3bk9v6.cloudfront.net/${product.product_id}.jpg`} alt={product.product_name + ' image'} className='w-full h-auto aspect-square' />
           <h1 className="text-lg font-semibold">{product.product_name} ~ <span className="font-normal">x{product.stock}</span></h1>
           <p className="text-sm text-gray-600">{product.description}</p>
 
