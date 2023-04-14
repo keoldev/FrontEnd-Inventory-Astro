@@ -1,0 +1,56 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install 
+    npm run build
+  displayName: 'npm install and build'
+  
+- task: SystemsManagerGetParameter@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    readMode: 'single'
+    parameterName: 'frontBucket'
+    singleNameTransform: 'custom'
+    customVariableName: 'BUCKET_NAME'
+  displayName: 'Gettin the bucket name'
+
+- task: SystemsManagerGetParameter@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    readMode: 'single'
+    parameterName: 'frontCloudfrontID'
+    singleNameTransform: 'custom'
+    customVariableName: 'DISTRIBUTION_ID'
+
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    bucketName: '$(BUCKET_NAME)'
+    sourceFolder: './out'
+    globExpressions: '**'
+
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    awsCommand: 'cloudfront'
+    awsSubCommand: 'create-invalidation'
+    awsArguments: '--distribution-id $(DISTRIBUTION_ID) --paths /*'
