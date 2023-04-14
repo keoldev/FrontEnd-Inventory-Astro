@@ -14,11 +14,6 @@ steps:
   inputs:
     versionSpec: '18.x'
   displayName: 'Install Node.js'
-
-- script: |
-    npm install 
-    npm run build
-  displayName: 'npm install and build'
   
 - task: SystemsManagerGetParameter@1
   inputs:
@@ -65,6 +60,18 @@ steps:
     parameterName: 'cognitoURL'
     singleNameTransform: 'custom'
     customVariableName: 'COGNITO_URL'
+
+- script: |
+    cat <<EoF> ./.env.local
+    NEXT_PUBLIC_API_URL=$(APIGATEWAY_URL)
+    NEXT_PUBLIC_CLOUDFRONT_URL=$(IMAGE_BUCKET_URL)
+    NEXT_PUBLIC_COGNITO_URL=$(COGNITO_URL)
+  displayName: 'creating environment variables'
+
+- script: |
+    npm install 
+    npm run build
+  displayName: 'npm install and build'
 
 - task: S3Upload@1
   inputs:
