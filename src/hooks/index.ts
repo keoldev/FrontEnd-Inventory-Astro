@@ -23,9 +23,7 @@ export interface Product {
   image: string
 }
 
-export const auth = window.location.hash.split("&")[0].split("=")[1]
-
-const GET_FETCHER = (url: string): Promise<DirtyProduct[]> => fetch(url, {headers: {Authorization: auth}}).then((res) => res.json())
+const GET_FETCHER = (url: string): Promise<DirtyProduct[]> => fetch(url).then((res) => res.json())
 
 export function useProducts() {
   const { data, isLoading, error } = useSWR(process.env.NEXT_PUBLIC_API_URL, GET_FETCHER)
