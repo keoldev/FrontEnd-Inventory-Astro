@@ -33,6 +33,7 @@ steps:
     parameterName: 'frontCloudfrontID'
     singleNameTransform: 'custom'
     customVariableName: 'DISTRIBUTION_ID'
+  displayName: 'Gettin the CloudFront distribution ID'
 
 - task: SystemsManagerGetParameter@1
   inputs:
@@ -42,6 +43,7 @@ steps:
     parameterName: 'apigatewayURL'
     singleNameTransform: 'custom'
     customVariableName: 'APIGATEWAY_URL'
+  displayName: 'Gettin the ApiGateway URL'
 
 - task: SystemsManagerGetParameter@1
   inputs:
@@ -51,6 +53,7 @@ steps:
     parameterName: 'imageCloudFrontURL'
     singleNameTransform: 'custom'
     customVariableName: 'IMAGE_BUCKET_URL'
+  displayName: 'Gettin the Image Bucket CloudFront URL '
 
 - task: SystemsManagerGetParameter@1
   inputs:
@@ -60,6 +63,7 @@ steps:
     parameterName: 'cognitoURL'
     singleNameTransform: 'custom'
     customVariableName: 'COGNITO_URL'
+  displayName: 'Gettin the Cognito URL'
 
 - script: |
     cat <<EoF> ./.env.local
