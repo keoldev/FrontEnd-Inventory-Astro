@@ -4,7 +4,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - azure-pipeline.yml
 
 pool:
   vmImage: ubuntu-latest
@@ -70,6 +75,7 @@ steps:
     NEXT_PUBLIC_API_URL=$(APIGATEWAY_URL)
     NEXT_PUBLIC_CLOUDFRONT_URL=$(IMAGE_BUCKET_URL)
     NEXT_PUBLIC_COGNITO_URL=$(COGNITO_URL)
+    EoF
   displayName: 'creating environment variables'
 
 - script: |
