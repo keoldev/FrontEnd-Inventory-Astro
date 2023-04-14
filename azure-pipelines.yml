@@ -39,6 +39,33 @@ steps:
     singleNameTransform: 'custom'
     customVariableName: 'DISTRIBUTION_ID'
 
+- task: SystemsManagerGetParameter@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    readMode: 'single'
+    parameterName: 'apigatewayURL'
+    singleNameTransform: 'custom'
+    customVariableName: 'APIGATEWAY_URL'
+
+- task: SystemsManagerGetParameter@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    readMode: 'single'
+    parameterName: 'imageCloudFrontURL'
+    singleNameTransform: 'custom'
+    customVariableName: 'IMAGE_BUCKET_URL'
+
+- task: SystemsManagerGetParameter@1
+  inputs:
+    awsCredentials: 'aws'
+    regionName: '$(REGION)'
+    readMode: 'single'
+    parameterName: 'cognitoURL'
+    singleNameTransform: 'custom'
+    customVariableName: 'COGNITO_URL'
+
 - task: S3Upload@1
   inputs:
     awsCredentials: 'aws'
