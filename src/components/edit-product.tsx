@@ -14,6 +14,7 @@ const PUT_FETCHER = async (url: string, { arg }: { arg: Product }) => {
     body: JSON.stringify(arg),
   })
   const res = await response.json()
+  console.log(res)
 }
 
 export const EditProduct = ({ updateState, product }: Props) => {
@@ -42,7 +43,7 @@ export const EditProduct = ({ updateState, product }: Props) => {
       delete data.image
     }
 
-    await trigger(data as Product)
+    await trigger({ ...data, image: productImage.split(',')[1] } as Product)
     form.reset()
     updateState(false)
   }
