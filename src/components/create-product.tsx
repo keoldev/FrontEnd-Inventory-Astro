@@ -3,17 +3,19 @@ import { Product } from '@/hooks'
 import { ChangeEvent, useState } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-const POST_FETCHER = async (url: string, { arg }: { arg: Product }) => {
+const POST_FETCHER = async (url: string, { arg }: { arg: Product & {token: string} }) => {
+  const { token, ...data } = arg
   const response = await fetch(url, {
     method: 'POST',
-    body: JSON.stringify(arg),
+    headers: {'Authorization': token},
+    body: JSON.stringify(data),
   })
   return await response.json()
 }
 
 export const DEFAULT_IMG = 'https://epayment.principia.edu/C23895_ustores/web/images/product-default-image.png'
 
-export const CreateProduct = () => {
+export const CreateProduct = ({token}:{token: string}) => {
   const { trigger } = useSWRMutation(process.env.NEXT_PUBLIC_API_URL, POST_FETCHER)
   const [productImage, setProductImage] = useState(DEFAULT_IMG)
 
@@ -25,7 +27,7 @@ export const CreateProduct = () => {
     const formData = new FormData(form)
     const data = Object.fromEntries(formData.entries()) as unknown as Product
 
-    await trigger({ ...data, image: productImage.split(',')[1] } as Product)
+    await trigger({ ...data, image: productImage.split(',')[1], token } as Product & {token: string})
     form.reset()
     setProductImage(DEFAULT_IMG)
   }

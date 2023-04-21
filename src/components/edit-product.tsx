@@ -6,18 +6,21 @@ import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 interface Props {
   updateState: Dispatch<SetStateAction<boolean>>
   product: Product
+  token: string
 }
 
-const PUT_FETCHER = async (url: string, { arg }: { arg: Product }) => {
+const PUT_FETCHER = async (url: string, { arg }: { arg: Product & {token: string}} ) : Promise<void> => {
+  const { token, ...data } = arg
   const response = await fetch(url, {
     method: 'PUT',
-    body: JSON.stringify(arg),
+    headers: {'Authorization': token},
+    body: JSON.stringify(data),
   })
   const res = await response.json()
   console.log(res)
 }
 
-export const EditProduct = ({ updateState, product }: Props) => {
+export const EditProduct = ({ updateState, product, token }: Props) => {
   const { trigger } = useSWRMutation(process.env.NEXT_PUBLIC_API_URL, PUT_FETCHER)
   const [productImage, setProductImage] = useState(product.image as string)
 
@@ -43,7 +46,7 @@ export const EditProduct = ({ updateState, product }: Props) => {
       delete data.image
     }
 
-    await trigger({ ...data, image: productImage.split(',')[1] } as Product)
+    await trigger({...data, image: productImage.split(',')[1], token } as Product & {token: string})
     form.reset()
     updateState(false)
   }

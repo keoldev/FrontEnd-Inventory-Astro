@@ -3,7 +3,7 @@ import { CreateProduct } from "@/components/create-product"
 import { EditProduct } from "@/components/edit-product"
 import { useProducts, Product } from "@/hooks"
 import useSWRMutation from 'swr/mutation'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const DELETE_FETCHER = async (url: string, { arg }: { arg: Pick<Product, 'product_id'> }) => {
   const response = await fetch(url, {
@@ -15,11 +15,18 @@ const DELETE_FETCHER = async (url: string, { arg }: { arg: Pick<Product, 'produc
 }
 
 export default function Home() {
+  const [ token, setToken ] = useState<string|null>(null)
   const { products, error, isLoading } = useProducts()
   const [showEditForm, setShowEditForm] = useState<boolean>(false)
   const [product, setProduct] = useState<Product>()
   const { trigger } = useSWRMutation(process.env.NEXT_PUBLIC_API_URL, DELETE_FETCHER)
 
+  useEffect(() => {
+    const access_token = window.location.hash.split("&")[0].split("=")[1]
+    if (!access_token) { window.location.href=process.env.NEXT_PUBLIC_COGNITO_URL as string }
+    if (access_token) { setToken(access_token) }
+  }, [])
+  
   if (isLoading) {
     return (
       <div>
@@ -61,8 +68,8 @@ export default function Home() {
       ))}
       {
         showEditForm && product
-          ? <EditProduct product={product} updateState={setShowEditForm} />
-          : <CreateProduct />
+          ? <EditProduct product={product} updateState={setShowEditForm} token={token as string} />
+          : <CreateProduct token={token as string} />
       }
     </>
   )
